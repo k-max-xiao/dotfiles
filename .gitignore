@@ -1,0 +1,5 @@
+# untrack the old version
+old_version
+
+# untrack vscode
+.vscode
