@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# This script includes the most common functions
+
+#######################################
+# Giving colors to echo
+# Arguments:
+#   color: the color of the line to print
+#   text...: the content to print
+# Outputs:
+#   Output the texts in the given color to screen
+#######################################
+function color_echo {
+    # create an associative array to store the available colors
+    # this can avoid using `eval` for recursive substitution
+    typeset -A colors
+    local colors=(
+        [black]=${black:-$(tput setaf 0)}
+        [red]=${red:-$(tput setaf 1)}
+        [green]=${green:-$(tput setaf 2)}
+        [yellow]=${yellow:-$(tput setaf 3)}
+        [blue]=${blue:-$(tput setaf 4)}
+        [magenta]=${magenta:-$(tput setaf 5)}
+        [cyan]=${cyan:-$(tput setaf 6)}
+        [white]=${white:-$(tput setaf 7)}
+        [reset]=${reset:-$(tput sgr 0)}
+    )
+    # set the color at the start and reset to non color at the end
+    echo "${colors[$1]}${@:2}${reset}"
+}
