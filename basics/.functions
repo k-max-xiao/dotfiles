@@ -3,6 +3,55 @@
 # This script includes the most common functions
 
 #######################################
+# Define shortcuts to printing style control commands.
+#
+# This function will define the shortcuts in global scope, so please use 
+# the following unset_styles() function to unset when no longer needed.
+#######################################
+function define_styles() {
+    # define the font colors
+    black=${black:-`tput setaf 0`}
+    red=${red:-`tput setaf 1`}
+    green=${green:-`tput setaf 2`}
+    yellow=${yellow:-`tput setaf 3`}
+    blue=${blue:-`tput setaf 4`}
+    magenta=${magenta:-`tput setaf 5`}
+    cyan=${cyan:-`tput setaf 6`}
+    white=${white:-`tput setaf 7`}
+    # define the font styles
+    bold=${bold:-`tput bold`}
+    underline=${underline:-`tput smul`}
+    blink=${blink:-`tput blink`}
+    rev=${rev:-`tput rev`}
+    invis=${invis:-`tput invis`}
+    # define reset to normal
+    reset=${reset:-`tput sgr 0`}
+}
+
+#######################################
+# Unset the previous defined printing style control commands from global scope.
+#######################################
+function unset_styles() {
+    # unset defined font colors
+    unset black
+    unset red
+    unset green
+    unset yellow
+    unset blue
+    unset magenta
+    unset cyan
+    unset white
+    # unset defined font styles
+    unset bold
+    unset underline
+    unset blink
+    unset rev
+    unset invis
+    # unset defined reset to normal
+    unset reset
+}
+
+#######################################
 # Giving colors to echo
 # Arguments:
 #   color: the color of the line to print
@@ -26,5 +75,5 @@ function color_echo {
         [reset]=${reset:-$(tput sgr 0)}
     )
     # set the color at the start and reset to non color at the end
-    echo "${colors[$1]}${@:2}${reset}"
+    echo "${colors[$1]}${@:2}${colors[reset]}"
 }
