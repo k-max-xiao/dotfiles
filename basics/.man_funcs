@@ -93,3 +93,85 @@ statement acts accordingly. Please be aware that side-effects may exist!"
     # unset the defined printing styles
     unset_styles
 }
+
+#######################################
+# Print the links to some useful cheatsheets
+#######################################
+function man_cheatsheets() {
+    # define the printing styles
+    define_styles
+
+    echo "\
+The followings are links to some useful ${cyan}cheatsheets${reset}:
+
+1. ${magenta}Bash${reset} Scripting CheatSheet:
+${underline}https://devhints.io/bash${reset}"
+
+    # unset the defined printing styles
+    unset_styles
+}
+
+#######################################
+# Print the links to some useful cheatsheets
+#######################################
+function man_io_redirections() {
+    # define the printing styles
+    define_styles
+
+    echo "\
+${cyan}Tips for ${bold}IO Redirection${reset} ${cyan}in ${bold}bash${reset}
+
+This tip is a concise conclusion of the following wonderful answer:
+${underline}https://unix.stackexchange.com/a/70971${reset}
+
+1. ${cyan}Numbers${reset} in IO redirection:
+
+a. a ${magenta}number 1${reset} = standard out / STDOUT
+b. a ${magenta}number 2${reset} = standard error / STDERR
+c. if no number specified, the ${magenta}number 1${reset} is assumed
+
+2. ${cyan}Functions${reset}:
+
+a. ${magenta}M>&-${reset}, like ${green}2>&-${reset}:
+${green}M${reset} is a file descriptor number. This will close output for \
+whichever file descriptor is referenced, i.e. ${green}M${reset}.
+
+b. ${magenta}M>/dev/null${reset}, like ${green}2>/dev/null${reset}:
+${green}M${reset} is a file descriptor number. This will redirect the file \
+descriptor to /dev/null, which discards all messages.
+
+c. ${magenta}M>&N${reset}, like ${green}2>&1${reset}:
+${green}M${reset} and ${green}N${reset} are both file descriptor numbers. \
+This combines the output of both file descriptors into a single stream of the \
+latter one.
+
+3. ${cyan}Abbreviations${reset}:
+
+a. ${magenta}|&${reset} is an abbreviation for ${green}2>&1 |${reset}
+b. ${magenta}&>/dev/null${reset} is an abbreviation for \
+${green}>/dev/null 2>&1${reset}
+c. ${magenta}>/dev/null${reset} is an abbreviation for \
+${green}1>/dev/null${reset}"
+
+    # unset the defined printing styles
+    unset_styles
+}
+
+#######################################
+# Print explanation and link for parameter extension
+#######################################
+function man_parameter_expension() {
+    # define the printing styles
+    define_styles
+
+    echo "\
+${cyan}Tips for ${bold}Parameter Expansion${reset}
+
+A very good and fully detailed manual can be found by following the link:
+${underline}\
+https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html\
+${reset}"
+
+    # unset the defined printing styles
+    unset_styles
+}

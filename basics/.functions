@@ -5,27 +5,27 @@
 #######################################
 # Define shortcuts to printing style control commands.
 #
-# This function will define the shortcuts in global scope, so please use 
+# This function will define the shortcuts in global scope, so please use
 # the following unset_styles() function to unset when no longer needed.
 #######################################
 function define_styles() {
     # define the font colors
-    black=${black:-`tput setaf 0`}
-    red=${red:-`tput setaf 1`}
-    green=${green:-`tput setaf 2`}
-    yellow=${yellow:-`tput setaf 3`}
-    blue=${blue:-`tput setaf 4`}
-    magenta=${magenta:-`tput setaf 5`}
-    cyan=${cyan:-`tput setaf 6`}
-    white=${white:-`tput setaf 7`}
+    black=${black:-$(tput setaf 0)}
+    red=${red:-$(tput setaf 1)}
+    green=${green:-$(tput setaf 2)}
+    yellow=${yellow:-$(tput setaf 3)}
+    blue=${blue:-$(tput setaf 4)}
+    magenta=${magenta:-$(tput setaf 5)}
+    cyan=${cyan:-$(tput setaf 6)}
+    white=${white:-$(tput setaf 7)}
     # define the font styles
-    bold=${bold:-`tput bold`}
-    underline=${underline:-`tput smul`}
-    blink=${blink:-`tput blink`}
-    rev=${rev:-`tput rev`}
-    invis=${invis:-`tput invis`}
+    bold=${bold:-$(tput bold)}
+    underline=${underline:-$(tput smul)}
+    blink=${blink:-$(tput blink)}
+    rev=${rev:-$(tput rev)}
+    invis=${invis:-$(tput invis)}
     # define reset to normal
-    reset=${reset:-`tput sgr 0`}
+    reset=${reset:-$(tput sgr 0)}
 }
 
 #######################################
@@ -59,7 +59,7 @@ function unset_styles() {
 # Outputs:
 #   Output the texts in the given color to screen
 #######################################
-function color_echo {
+function color_echo() {
     # create an associative array to store the available colors
     # this can avoid using `eval` for recursive substitution
     typeset -A colors
@@ -76,4 +76,92 @@ function color_echo {
     )
     # set the color at the start and reset to non color at the end
     echo "${colors[$1]}${@:2}${colors[reset]}"
+}
+
+#######################################
+# Smartly extract archives - use: extract <file>
+# Based on http://dotfiles.org/~pseup/.bashrc
+# Arguments:
+#   file: the archive file to extract
+#######################################
+function extract() {
+    if [ -f "$1" ]; then
+        # if the given argument is a file, then extract the basename as
+        # the filename
+        local filename=$(basename "$1")
+        # the name of the new folder is the filename with no extension, to
+        # store all extracted files
+        # %% will remove the longest matching pattern while % will only remove
+        # the shorest one
+        # Please call man_parameter_extension() for more details
+        local foldername="${filename%%.*}"
+        # get the full path to the folder?
+        local fullpath=$(perl -e 'use Cwd "abs_path";print abs_path(shift)' "$1")
+        local didfolderexist=false
+        if [ -d "$foldername" ]; then
+            # if the folde exists, we need to ask if user wants to override it
+            didfolderexist=true
+            read -p "$foldername already exists, do you want to overwrite it? (y/n) " -n 1
+            # new line
+            echo
+            if [[ $REPLY =~ ^[Nn]$ ]]; then
+                # exit if do not override
+                return
+            fi
+        fi
+        # make and cd into the new folder
+        mkdir -p "$foldername" && cd "$foldername"
+        # smartly extract the target file according to the extension
+        case $1 in
+        *.tar.bz2) tar xjf "$fullpath" ;;
+        *.tar.gz) tar xzf "$fullpath" ;;
+        *.tar.xz) tar Jxvf "$fullpath" ;;
+        *.tar.Z) tar xzf "$fullpath" ;;
+        *.tar) tar xf "$fullpath" ;;
+        *.taz) tar xzf "$fullpath" ;;
+        *.tb2) tar xjf "$fullpath" ;;
+        *.tbz) tar xjf "$fullpath" ;;
+        *.tbz2) tar xjf "$fullpath" ;;
+        *.tgz) tar xzf "$fullpath" ;;
+        *.txz) tar Jxvf "$fullpath" ;;
+        *.zip) unzip "$fullpath" ;;
+        # the extension is not recognised
+        *) echo "'$1' cannot be extracted via extract()" && cd .. && ! $didfolderexist && rm -r "$foldername" ;;
+        esac
+    else
+        # the given argument is not a file
+        echo "'$1' is not a valid file"
+    fi
+}
+
+#######################################
+# Check if a string is a valid ip address
+# Arguments:
+#   ip: the ip address to check
+#######################################
+function valid_ip() {
+    if [$# -eq 0 ]; then
+        # print usage and exit with error code if no given argument
+        echo "Usage: valid_ip IP_ADDRESS"
+        return 3 # incorrect usage
+    else
+        ip="$1"
+        if expr "$ip" : '[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*$' >/dev/null; then
+            # if the argument is 4 numbers separated by dot(.)
+            for i in 1 2 3 4; do
+                if [ $(echo "$ip" | cut -d. -f$i) -gt 255 ]; then
+                    # if any of the 4 numebrs is greater than 255, the given 
+                    # argument is not a valid ip, so exit with error code
+                    return 2 # invalid squad number
+                fi
+            done
+            # if all the 4 numbers are smaller than or equal to 255, the given 
+            # ip address is valid, so exit with 0 (true)
+            return 0 # valid ip
+        else
+            # if the argument is not 4 numbers separated by dot(.), it is 
+            # invalid, so exit with error code
+            return 1 # invalid ip format
+        fi
+    fi
 }
