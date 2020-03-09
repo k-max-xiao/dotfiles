@@ -150,16 +150,16 @@ function valid_ip() {
             # if the argument is 4 numbers separated by dot(.)
             for i in 1 2 3 4; do
                 if [ $(echo "$ip" | cut -d. -f$i) -gt 255 ]; then
-                    # if any of the 4 numebrs is greater than 255, the given 
+                    # if any of the 4 numebrs is greater than 255, the given
                     # argument is not a valid ip, so exit with error code
                     return 2 # invalid squad number
                 fi
             done
-            # if all the 4 numbers are smaller than or equal to 255, the given 
+            # if all the 4 numbers are smaller than or equal to 255, the given
             # ip address is valid, so exit with 0 (true)
             return 0 # valid ip
         else
-            # if the argument is not 4 numbers separated by dot(.), it is 
+            # if the argument is not 4 numbers separated by dot(.), it is
             # invalid, so exit with error code
             return 1 # invalid ip format
         fi

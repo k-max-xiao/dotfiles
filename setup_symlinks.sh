@@ -3,7 +3,7 @@
 # This script symlinks all the dotfiles and dot folders in ./basics to ~/
 # TODO: It will also symlinks ./bin to ~/bin for easy updating
 
-# This script is idempotent, so you can safely run it for multiple times and 
+# This script is idempotent, so you can safely run it for multiple times and
 # it has the same result as only running it for once.
 
 # This script provides interactive prompts to ask your decision for uncertain
@@ -11,7 +11,6 @@
 
 # This script is heavily inspired by alrra's nice work here:
 # https://raw.githubusercontent.com/alrra/dotfiles/master/os/create_symbolic_links.sh
-
 
 ######### Utils Functions #########
 
@@ -48,7 +47,7 @@ function print_result() {
 #   Output the question in red on screen and read user's answer
 #######################################
 function ask() {
-    # print 
+    # print
     print_question "$1"
     read
     # the result of read can be fetched by $REPLY
@@ -79,15 +78,15 @@ function ask_for_confirmation() {
 function answer_is_yes() {
     # $REPLY will fetch the last read input
     if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-        return 0  # 0 is true (exit without error)
+        return 0 # 0 is true (exit without error)
     else
-        return 1  # 1 is false (having error)
+        return 1 # 1 is false (having error)
     fi
 }
 
 #######################################
 # Ask for sudo credentials and keep-alive sudo status until task finishes.
-# Good for long-running script that need sudo internally but shouldn't be run 
+# Good for long-running script that need sudo internally but shouldn't be run
 # with sudo.
 # Original idea from: https://gist.github.com/cowboy/3118588
 #######################################
@@ -105,15 +104,15 @@ function ask_and_update_sudo() {
         # $$ is the PID of the parent process. 'kill -0 PID' exits with an exit
         # code of 0 if the PID is of a running process, otherwise exits with an
         # exit code of 1. So basically, 'kill -0 "$$" || exit' aborts the while
-        # loop child process as soon as the parent process is no longer 
+        # loop child process as soon as the parent process is no longer
         # running.
         #
-        # kill -0 will send signal 0 to the given PID and just checks if the 
+        # kill -0 will send signal 0 to the given PID and just checks if the
         # process is running and you have the permission to send a signal to it
         # This signal will not terminate the process
         kill -0 "$$" || exit
-    # &>/dev/null is an abbreviation for >/dev/null 2>&1, to silence all output
-    done &> /dev/null &
+        # &>/dev/null is an abbreviation for >/dev/null 2>&1, to silence all output
+    done &>/dev/null &
 }
 
 #######################################
@@ -124,7 +123,7 @@ function ask_and_update_sudo() {
 #   0 (true) if exists or 1 (false) otherwise
 #######################################
 function command_exist() {
-    # -v option makes `command` to return the name of the command in query if 
+    # -v option makes `command` to return the name of the command in query if
     # it exists, then -x tests if it is executable by user
     if [ -x "$(command -v ${1})" ]; then
         return 0
@@ -137,15 +136,15 @@ function command_exist() {
 # Execute a command and print out result
 # Arguments:
 #   command: the command to execute
-#   message: optional, the message to print out after execution 
+#   message: optional, the message to print out after execution
 # Outputs:
 #   the given message or the original command if not given
 #######################################
 function execute() {
     # execute the command then redirect STDOUT and STDERR to be discarded
-    $1 &> /dev/null
+    $1 &>/dev/null
     # print an informtaion as success or failure according to result status
-    # if a second argument is provided then print it, otherwise the original 
+    # if a second argument is provided then print it, otherwise the original
     # command
     print_result $? "${2:-1}"
 }
@@ -154,9 +153,12 @@ function execute() {
 # Check if inside a git repository
 #######################################
 function is_git_repository() {
-    # git rev-parse --git-dir will return with an exit code of 0 if inside a 
+    # git rev-parse --git-dir will return with an exit code of 0 if inside a
     # git repository, no matter the top level or not.
-    if [ "$(git rev-parse --git-dir &>/dev/null; print $?)" -eq 0 ]; then
+    if [ "$(
+        git rev-parse --git-dir &>/dev/null
+        print $?
+    )" -eq 0 ]; then
         return 0
     else
         return 1
@@ -191,38 +193,38 @@ function safe_mkdir() {
 }
 
 # Get the full path of the current script, no matter whre it is called from.
-# 
-# This feature is script dependent. It will fail to work if it is defined in 
+#
+# This feature is script dependent. It will fail to work if it is defined in
 # another script and called here.
-# 
+#
 # ${BASH_SOURCE[0]} is a bash-specific variable which contains the (potentially
-# relative) path of the containing script in all invocation scenarios, notably 
+# relative) path of the containing script in all invocation scenarios, notably
 # also when the script is sourced, which is not true for $0.
 #
-# >/dev/null will redirect all STDOUT to the /dev/null black hole where all 
+# >/dev/null will redirect all STDOUT to the /dev/null black hole where all
 # messages written to it will be discarded.
-# 
-# 2>&1 will redirect all the STDERR to STDOUT. 2 is the handle for STDERR and 
-# 1 is the handle for STDOUT. & signals that 1 is a hanlder, otherwise 1 will 
+#
+# 2>&1 will redirect all the STDERR to STDOUT. 2 is the handle for STDERR and
+# 1 is the handle for STDOUT. & signals that 1 is a hanlder, otherwise 1 will
 # be treated as a file name.
 #
-# In total, >/dev/null 2>&1 means to discard all standard output and error, 
+# In total, >/dev/null 2>&1 means to discard all standard output and error,
 # resulting in no output to the screen.
-# 
-# The nested double quotes are valid because once inside $( ... ), quoting 
-# starts all over from scratch. In other words, "..." and $( ... ) can nest 
+#
+# The nested double quotes are valid because once inside $( ... ), quoting
+# starts all over from scratch. In other words, "..." and $( ... ) can nest
 # within each other.
-_SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+_SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 # find all dotfiles to symlink and store them in an associative array
-declare -a FILES_TO_SYMLINK=$(find $_SCRIPT_PATH/basics/ -type f )
+declare -a FILES_TO_SYMLINK=$(find $_SCRIPT_PATH/basics/ -type f)
 
 # clear up viriable
 unset _SCRIPT_PATH
 
 #######################################
 # Main program to symlink the dotfiles
-# 
+#
 # This should be tested by calling with a temperory folder as argument
 #######################################
 function setup_symlinks() {
@@ -249,7 +251,7 @@ function setup_symlinks() {
     # symlink the dotfiles one by one
     for sourceFile in ${FILES_TO_SYMLINK[@]}; do
         # construct the target file path
-        targetFile="$targetDir/`basename $sourceFile`"
+        targetFile="$targetDir/$(basename $sourceFile)"
         # construct the message to print
         message="$targetFile -> $sourceFile"
         if [ -e "$targetFile" ]; then

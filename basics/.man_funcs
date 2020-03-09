@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# This script includes the utility functions to print tips about bash commands 
+# This script includes the utility functions to print tips about bash commands
 # in terminal, avoiding search for common answers online again and again.
-# 
-# This script requires that the `.functions` script has been sourced in order 
+#
+# This script requires that the `.functions` script has been sourced in order
 # to use the utility color printing functions inside.
 
 # print a warning if the required .functions script was not sourced beforehand
