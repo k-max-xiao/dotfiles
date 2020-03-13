@@ -12,185 +12,7 @@
 # This script is heavily inspired by alrra's nice work here:
 # https://raw.githubusercontent.com/alrra/dotfiles/master/os/create_symbolic_links.sh
 
-######### Utils Functions #########
-
-#######################################
-# using alias instead of functions to define the simple printing commands
-#######################################
-alias print_error="color_echo red [✖]"
-alias print_info="color_echo cyan [!]"
-alias print_success="color_echo green [✔]"
-alias print_question="color_echo yellow [?]"
-
-#######################################
-# Print the result text in correspondent color depending on the result
-# Arguments:
-#   result: normally the execution return, 0 for all good and other for error
-#   text...: the result texts to output on screen
-# Outputs:
-#   Output the result texts on screen with appropriate colors
-#######################################
-function print_result() {
-    # check if result is good (equals 0)
-    if [ $1 -eq 0 ]; then
-        print_success "${@:2}"
-    else
-        print_error "${@:2}"
-    fi
-}
-
-#######################################
-# Prompt a question on screen to user and read user's answer
-# Arguments:
-#   question: the question to ask
-# Outputs:
-#   Output the question in red on screen and read user's answer
-#######################################
-function ask() {
-    # print
-    print_question "$1"
-    read
-    # the result of read can be fetched by $REPLY
-}
-
-#######################################
-# Prompt some information on screen then ask for user's confirmation (Y/N)
-# Arguments:
-#   infos: the informtaion to print
-# Outputs:
-#   Output the question in red on screen and read user's answer
-#######################################
-function ask_for_confirmation() {
-    # print out the question
-    print_question "$@ (y/n) "
-    # just read one character
-    # the result will be stored in $REPLY
-    read -n 1
-    # finish the input line
-    printf "\n"
-}
-
-#######################################
-# Check if the last command line input is Y or y
-# Outputs:
-#   0 (true) if exists or 1 (false) otherwise
-#######################################
-function answer_is_yes() {
-    # $REPLY will fetch the last read input
-    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-        return 0 # 0 is true (exit without error)
-    else
-        return 1 # 1 is false (having error)
-    fi
-}
-
-#######################################
-# Ask for sudo credentials and keep-alive sudo status until task finishes.
-# Good for long-running script that need sudo internally but shouldn't be run
-# with sudo.
-# Original idea from: https://gist.github.com/cowboy/3118588
-#######################################
-function ask_and_update_sudo() {
-    # Ask user for sudo credentials and update it in cache.
-    # The cache is valid for 15 minutes by default, so we need to keep updating
-    # it continuously until the task is finished
-    sudo -v
-    # to keep updating the sudo status
-    while true; do
-        # update sudo status in --non-interactive way
-        sudo -n true
-        # update the status every 60 seconds
-        sleep 60
-        # $$ is the PID of the parent process. 'kill -0 PID' exits with an exit
-        # code of 0 if the PID is of a running process, otherwise exits with an
-        # exit code of 1. So basically, 'kill -0 "$$" || exit' aborts the while
-        # loop child process as soon as the parent process is no longer
-        # running.
-        #
-        # kill -0 will send signal 0 to the given PID and just checks if the
-        # process is running and you have the permission to send a signal to it
-        # This signal will not terminate the process
-        kill -0 "$$" || exit
-        # &>/dev/null is an abbreviation for >/dev/null 2>&1, to silence all output
-    done &>/dev/null &
-}
-
-#######################################
-# Check if a command exists or not
-# Arguments:
-#   command: the command to check
-# Outputs:
-#   0 (true) if exists or 1 (false) otherwise
-#######################################
-function command_exist() {
-    # -v option makes `command` to return the name of the command in query if
-    # it exists, then -x tests if it is executable by user
-    if [ -x "$(command -v ${1})" ]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-#######################################
-# Execute a command and print out result
-# Arguments:
-#   command: the command to execute
-#   message: optional, the message to print out after execution
-# Outputs:
-#   the given message or the original command if not given
-#######################################
-function execute() {
-    # execute the command then redirect STDOUT and STDERR to be discarded
-    $1 &>/dev/null
-    # print an informtaion as success or failure according to result status
-    # if a second argument is provided then print it, otherwise the original
-    # command
-    print_result $? "${2:-1}"
-}
-
-#######################################
-# Check if inside a git repository
-#######################################
-function is_git_repository() {
-    # git rev-parse --git-dir will return with an exit code of 0 if inside a
-    # git repository, no matter the top level or not.
-    if [ "$(
-        git rev-parse --git-dir &>/dev/null
-        print $?
-    )" -eq 0 ]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-#######################################
-# Safely create a directory and print out result.
-# Arguments:
-#   dir: directory to create, using 'mkdir -p' behind the scene
-# Outputs:
-#   Success or failure message
-#######################################
-function safe_mkdir() {
-    if [ -n "$1" ]; then
-        # only proceed if an argument is given
-        if [ -e "$1" ]; then
-            # if the given path exists
-            if [ ! -d "$1" ]; then
-                # if the given path exists and is a file then print error
-                print_error "$1 - a file with the same name already exists!"
-            else
-                # if the given path exists and is a directory then print
-                # success without mkdir
-                print_success "$1"
-            fi
-        else
-            # if the given path does not exist then create it and print result
-            execute "mkdir -p $1" "$1"
-        fi
-    fi
-}
+source util_funcs.sh
 
 # Get the full path of the current script, no matter whre it is called from.
 #
@@ -216,42 +38,34 @@ function safe_mkdir() {
 # within each other.
 _SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-# find all dotfiles to symlink and store them in an associative array
+# find all dotfiles to symlink and store them in an array
 declare -a FILES_TO_SYMLINK=$(find $_SCRIPT_PATH/basics/ -type f)
 
-# clear up viriable
-unset _SCRIPT_PATH
+# an array to store all the full paths of the soft links to create
+declare -a LINK_PATHS
+
+# flag for debug mode
+# in debug mode, all sub level details will be printed on screen
+DOTFILES_DEBUG=false
 
 #######################################
-# Main program to symlink the dotfiles
-#
-# This should be tested by calling with a temperory folder as argument
+# Create the soft links of the dotfiles in the given directory
+# Arguments:
+#   dir: The directory to create the soft links
 #######################################
-function setup_symlinks() {
+function create_symlinks() {
     # local variables so no need to unset
     local sourceFile=""
     local targetFile=""
     local message=""
-    local targetDir=""
-    # set target directory
-    if [ "$#" -gt 0 ]; then
-        # if at least one argument is given
-        if [ -d "$1" ]; then
-            # if the first argument is a directory, then it's the target folder
-            targetDir="$1"
-        else
-            # if the first argument is not a directory, then print error & exit
-            print_error "$1 is not a directory!"
-            return
-        fi
-    else
-        # if no argument is given, then use home folder as the target folder
-        targetDir="$HOME"
-    fi
+    local targetDir="$1"
+    # initialise the full paths array to empty array before creating new links
+    LINK_PATHS=()
     # symlink the dotfiles one by one
     for sourceFile in ${FILES_TO_SYMLINK[@]}; do
         # construct the target file path
         targetFile="$targetDir/$(basename $sourceFile)"
+        LINK_PATHS+=($targetFile)
         # construct the message to print
         message="$targetFile -> $sourceFile"
         if [ -e "$targetFile" ]; then
@@ -281,4 +95,92 @@ function setup_symlinks() {
         fi
     done
     return
+}
+
+#######################################
+# Safely add the sourcing commends for the soft links in .bashrc
+# Arguments:
+#   dir: The directory of .bashrc
+#######################################
+function safe_update_bashrc {
+    # local variables so no need to unset
+    local link
+    local line
+    if [ ! -f $1/.bashrc ]; then
+        # return false if .bashrc does not exist or is not a file
+        print_error "$1/.bashrc doesn't exist!"
+        return 1
+    fi
+    for link in ${LINK_PATHS[@]}; do
+        # iterate over all dotfiles
+        # the actual line to add into .bashrc
+        line="source $link # Custom Dotfiles"
+        if [[ `grep -Fx "$line" $1/.bashrc | wc -l` -gt 0 ]]; then
+            # if the target line already exists, print information
+            print_info "$link has already been sourced, safely skip it"
+        elif [[ `grep -x "^# *${line}$" $1/.bashrc | wc -l` -gt 0 ]]; then
+            # if the target line has been commented, print question
+            print_question "$link has been commented in $1/.bashrc, please check manually"
+        else
+            # if the target line is not in .bashrc
+            if echo $line >> $1/.bashrc; then
+                print_success "$link has been successfully sourced in $1/.bashrc"
+            else
+                print_error "Failed to source $link into $1/.bashrc"
+            fi
+        fi
+    done
+}
+
+#######################################
+# Back up the original dotfiles
+#######################################
+function backup_original_dotfiles {
+    # the folder to store the original dotfiles
+    local DOTFILES_BACKUP_DIR=$_SCRIPT_PATH/backup
+    # the array of dotfiles to backup
+    local DOTFILES_TO_BACKUP=(
+        .bashrc
+        .profile
+    )
+    if (execute "safe_mkdir $DOTFILES_BACKUP_DIR" "Create backup folder"); then
+        # if the backup folder exists or can be created
+        print_success "$DOTFILES_BACKUP_DIR created"
+        local file
+        for file in ${DOTFILES_TO_BACKUP[@]}; do
+            # perform backup for each target original dotfile
+            execute "cp -Rp $HOME/$file $DOTFILES_BACKUP_DIR/$file" "Backup $file"
+        done
+    fi
+}
+
+#######################################
+# The main program to setup the symlink task
+# Arguments:
+#   dir (optional): the target directory of .bashrc, also the directory to 
+#       create the soft links; it will be $HOME by default
+#######################################
+function setup_symlinks {
+    local targetDir
+    # set target directory
+    if [ "$#" -gt 0 ]; then
+        # if at least one argument is given
+        if [ -d "$1" ]; then
+            # if the first argument is a directory, then it's the target folder
+            targetDir="$1"
+        else
+            # if the first argument is not a directory, then print error & exit
+            print_error "$1 is not a directory!"
+            return
+        fi
+    else
+        # if no argument is given, then use home folder as the target folder
+        targetDir="$HOME"
+    fi
+    # firstly backup the original dotfiles
+    execute backup_original_dotfiles "Backup original dotfiles"
+    # secondly create soft links in the target directory
+    execute "create_symlinks $targetDir" "Soft link dotfiles to home folder"
+    # lastly safely update .bashrc to source the soft links
+    execute "safe_update_bashrc $targetDir" "Safely update symlinks into bashrc"
 }

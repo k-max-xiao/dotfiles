@@ -3,3 +3,6 @@ old_version
 
 # untrack vscode
 .vscode
+
+# untrack backuped dotfiles
+backup
