@@ -1,0 +1,177 @@
+#!/bin/bash
+#
+# This script includes the utility functions to print tips about bash commands
+# in terminal, avoiding search for common answers online again and again.
+#
+# This script requires that the `.functions` script has been sourced in order
+# to use the utility color printing functions inside.
+
+# print a warning if the required .functions script was not sourced beforehand
+if [ "$(type -t define_styles)" != "function" ]; then
+    echo "WARNING! '.functions' must be sourced before using this script!"
+fi
+
+#######################################
+# Print colored tips about sourcing a script
+#######################################
+function man_source() {
+    # define the printing styles
+    define_styles
+
+    # print pretty tips
+    echo "\
+${cyan}Tips for ${bold}source${reset} ${cyan}command${reset}
+
+This tip is a concise conclusion of the following wonderful answer:
+${underline}https://askubuntu.com/a/182020${reset}
+
+Basically, there are the following ways to source or execute a script:
+1. ${magenta}source${reset} command, which will load and execute the target \
+script in the current shell.
+2. ${magenta}. script${reset}, which is identic to ${blue}source${reset} \
+command. Plese be aware of the space between the dot and the sciprt name.
+3. ${magenta}./script${reset}, which requires the script being executable, \
+where executable permission can be set by ${blue}chmox +x${reset}, and will \
+use the program indicated by the Hashbang line, normally the first line \
+looking like ${green}#!/bin/sh${reset}, to run the script.\
+"
+
+    # unset the defined printing styles
+    unset_styles
+}
+
+#######################################
+# Print colored tips about condition in if statment
+#######################################
+function man_condition() {
+    # define the printing styles
+    define_styles
+
+    echo "\
+${cyan}Tips for ${bold}condition${reset} ${cyan}operators in ${bold}if\
+${reset} ${cyan}statement${reset}
+
+This tip is a concise conclusion of the following wonderful answer:
+${underline}https://unix.stackexchange.com/a/306115${reset}
+
+Basically, there are the following five ways to evaluate a condition in an \
+${bold}if${reset} statement:
+
+1. ${magenta}if ${bold}[ confidtion ]${reset}:
+Traditinoal shell ${blue}test${reset} command available on all POSIX shells. \
+It sets an exit code, normally ${bold}0${reset} for success/true and \
+${bold}1${reset} for error/false, and the ${magenta}if${reset} statement acts \
+accordingly. Typically to test if a file exists or if two numbers are equal.
+
+2. ${magenta}if ${bold}[[ confidtion ]]${reset}:
+Upgraded variation of ${blue}test${reset} from ${green}ksh${reset} that \
+${green}bash${reset} and ${green}zsh${reset} also support. It also sets an \
+exit code and the ${magenta}if${reset} statement acts accordingly. Among its \
+extended features, it can test if a string matches a regular expression by \
+the operator ${blue}=~${reset}, which matches the quoted string on the left \
+to the unquoted regular expression on the right, like: \
+${bold}[[ \"string\" =~ pattern ]]${reset}.
+
+3. ${magenta}if ${bold}(( confidtion ))${reset}:
+Another ${green}ksh${reset} extension that ${green}bash${reset} and \
+${green}zsh${reset} also support, to perform arithmetics. It returns an exit \
+code of ${bold}0 (true)${reset} if the arithmetic calculation result is \
+non-zero and the ${magenta}if${reset} statement acts accordingly.
+
+4. ${magenta}if ${bold}(command)${reset}:
+This runs the ${magenta}command${reset} in a subshell. When the command \
+completes, it sets an exit code and the ${magenta}if${reset} statement acts \
+accordingly. A typical reason for using a subshell like this is to limit the \
+side-effects of the ${magenta}command${reset} if ${magenta}command${reset} \
+requires variable assignments or other changes to the shell's environment. \
+Such changes do not remain after the subshell completes.
+
+5. ${magenta}if ${bold}command${reset}:
+The ${bold}command${reset} will be exected and the ${magenta}if${reset} \
+statement acts accordingly. Please be aware that side-effects may exist!"
+
+    # unset the defined printing styles
+    unset_styles
+}
+
+#######################################
+# Print the links to some useful cheatsheets
+#######################################
+function man_cheatsheets() {
+    # define the printing styles
+    define_styles
+
+    echo "\
+The followings are links to some useful ${cyan}cheatsheets${reset}:
+
+1. ${magenta}Bash${reset} Scripting CheatSheet:
+${underline}https://devhints.io/bash${reset}"
+
+    # unset the defined printing styles
+    unset_styles
+}
+
+#######################################
+# Print the links to some useful cheatsheets
+#######################################
+function man_io_redirections() {
+    # define the printing styles
+    define_styles
+
+    echo "\
+${cyan}Tips for ${bold}IO Redirection${reset} ${cyan}in ${bold}bash${reset}
+
+This tip is a concise conclusion of the following wonderful answer:
+${underline}https://unix.stackexchange.com/a/70971${reset}
+
+1. ${cyan}Numbers${reset} in IO redirection:
+
+a. a ${magenta}number 1${reset} = standard out / STDOUT
+b. a ${magenta}number 2${reset} = standard error / STDERR
+c. if no number specified, the ${magenta}number 1${reset} is assumed
+
+2. ${cyan}Functions${reset}:
+
+a. ${magenta}M>&-${reset}, like ${green}2>&-${reset}:
+${green}M${reset} is a file descriptor number. This will close output for \
+whichever file descriptor is referenced, i.e. ${green}M${reset}.
+
+b. ${magenta}M>/dev/null${reset}, like ${green}2>/dev/null${reset}:
+${green}M${reset} is a file descriptor number. This will redirect the file \
+descriptor to /dev/null, which discards all messages.
+
+c. ${magenta}M>&N${reset}, like ${green}2>&1${reset}:
+${green}M${reset} and ${green}N${reset} are both file descriptor numbers. \
+This combines the output of both file descriptors into a single stream of the \
+latter one.
+
+3. ${cyan}Abbreviations${reset}:
+
+a. ${magenta}|&${reset} is an abbreviation for ${green}2>&1 |${reset}
+b. ${magenta}&>/dev/null${reset} is an abbreviation for \
+${green}>/dev/null 2>&1${reset}
+c. ${magenta}>/dev/null${reset} is an abbreviation for \
+${green}1>/dev/null${reset}"
+
+    # unset the defined printing styles
+    unset_styles
+}
+
+#######################################
+# Print explanation and link for parameter extension
+#######################################
+function man_parameter_expension() {
+    # define the printing styles
+    define_styles
+
+    echo "\
+${cyan}Tips for ${bold}Parameter Expansion${reset}
+
+A very good and fully detailed manual can be found by following the link:
+${underline}\
+https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html\
+${reset}"
+
+    # unset the defined printing styles
+    unset_styles
+}
