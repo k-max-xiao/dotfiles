@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# This script includes the most common exports
+
+# set vim as default editor
+export EDITOR="vim"
+
+###### set virtualenvwrapper's WORKON_HOME
+export WORKON_HOME=~/Workspace/PyEnvs
+
+###### disable 'pip' command if not in a virtual env
+export PIP_REQUIRE_VIRTUALENV=true
