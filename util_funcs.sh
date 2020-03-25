@@ -82,12 +82,48 @@ function color_echo() {
 }
 
 #######################################
-# using alias instead of functions to define the simple printing commands
+# Print the error text in red with cross mark in front
+# Arguments:
+#   text...: the error text to output on screen
+# Outputs:
+#   Output the error text in red with cross mark in front on screen
 #######################################
-alias print_error="color_echo red [✖]"
-alias print_info="color_echo cyan [!]"
-alias print_success="color_echo green [✔]"
-alias print_question="color_echo yellow [?]"
+function print_error {
+    color_echo red [✖] ${@}
+}
+
+#######################################
+# Print the information text in cyan with exclamation mark in front
+# Arguments:
+#   text...: the information text to output on screen
+# Outputs:
+#   Output the information text in cyan with exclamation mark in front on screen
+#######################################
+function print_info {
+    color_echo cyan [!] ${@}
+}
+
+#######################################
+# Print the success text in green with check mark in front
+# Arguments:
+#   text...: the success text to output on screen
+# Outputs:
+#   Output the success text in green with check mark in front on screen
+#######################################
+function print_success {
+    color_echo green [✔] ${@}
+}
+
+#######################################
+# Print the question text in yellow with question mark in front
+# Arguments:
+#   text...: the question text to output on screen
+# Outputs:
+#   Output the question text in yellow with question mark in front on screen
+#######################################
+function print_question {
+    color_echo yellow [?] ${@}
+}
 
 #######################################
 # Print the result text in correspondent color depending on the result

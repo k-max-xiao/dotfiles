@@ -12,8 +12,6 @@
 # This script is heavily inspired by alrra's nice work here:
 # https://raw.githubusercontent.com/alrra/dotfiles/master/os/create_symbolic_links.sh
 
-source util_funcs.sh
-
 # Get the full path of the current script, no matter whre it is called from.
 #
 # This feature is script dependent. It will fail to work if it is defined in
@@ -37,6 +35,8 @@ source util_funcs.sh
 # starts all over from scratch. In other words, "..." and $( ... ) can nest
 # within each other.
 _SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+source $_SCRIPT_PATH/util_funcs.sh
 
 # find all dotfiles to symlink and store them in an array
 declare -a FILES_TO_SYMLINK=$(find $_SCRIPT_PATH/basics/ -type f)
