@@ -26,6 +26,18 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Check out codes
       uses: actions/checkout@v2
+    
+    # Build the docker image
+    - name: Build docker image
+      uses:
+        - name: build docker image
+        - description: "To build the docker image"
+        - runs:
+          - using: 'docker'
+          - image: 'Dockerfile'
+          - env:
+            DOT_TEST_INSTALLERS: true
+          - entrypoint: 'bats tests/'
 
     # Run the unit tests by Bats
     - name: Test
