@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 # install BATS for script testing
 RUN apt update \
-    && apt install -y git \
+    && apt install -y git sudo \
     && cd ../ \
     && mkdir bats \
     && cd bats \
@@ -10,9 +10,9 @@ RUN apt update \
     && ./install.sh /usr/local \
     && cd .. \
     && rm -r bats-core \
-    && apt purge -y --auto-remove git
-# create a new non-privileged user
-RUN useradd --create-home --no-log-init --shell /bin/bash tester
+    && apt purge -y --auto-remove git \
+    && useradd --create-home --no-log-init --password '' -s /bin/bash tester \
+    && adduser tester sudo
 # set to use this new user instead of dangerous root
 USER tester
 # create the project folder and set it as the work directory
