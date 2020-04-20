@@ -31,20 +31,4 @@ jobs:
       run: docker build -t dotfiles:test .
     
     - name: Run tests in docker image
-      run: docker run -it --rm -e DOT_TEST_INSTALLERS=true --entrypoint 'bats'  dotfiles:test tests/
-    
-    # # Build the docker image
-    # - name: Build docker image
-    #   uses:
-    #     - name: build docker image
-    #     - description: "To build the docker image"
-    #     - runs:
-    #       - using: 'docker'
-    #       - image: 'Dockerfile'
-    #       - env:
-    #         DOT_TEST_INSTALLERS: true
-    #       - entrypoint: 'bats tests/'
-
-    # # Run the unit tests by Bats
-    # - name: Test
-    #   run: bats -r tests
+      run: docker run --rm -e DOT_TEST_INSTALLERS=true --entrypoint 'bats'  dotfiles:test -r tests/
