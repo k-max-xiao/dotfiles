@@ -1,0 +1,13 @@
+# untrack the old version
+old_version
+
+# untrack vscode
+.vscode
+
+# untrack backuped dotfiles
+backup
+
+# the git relevant
+.github
+.git
+.gitignore

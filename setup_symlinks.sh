@@ -177,6 +177,8 @@ function setup_symlinks {
         # if no argument is given, then use home folder as the target folder
         targetDir="$HOME"
     fi
+    # 
+    print_info "Target dotfile operation folder: $targetDir"
     # firstly backup the original dotfiles
     execute backup_original_dotfiles "Backup original dotfiles"
     # secondly create soft links in the target directory

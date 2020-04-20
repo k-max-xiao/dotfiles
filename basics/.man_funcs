@@ -6,10 +6,59 @@
 # This script requires that the `.functions` script has been sourced in order
 # to use the utility color printing functions inside.
 
-# print a warning if the required .functions script was not sourced beforehand
-if [ "$(type -t define_styles)" != "function" ]; then
-    echo "WARNING! '.functions' must be sourced before using this script!"
-fi
+# # print a warning if the required .functions script was not sourced beforehand
+# if [ "$(type -t define_styles)" != "function" ]; then
+#     echo "WARNING! '.functions' must be sourced before using this script!"
+# fi
+
+#######################################
+# Define shortcuts to printing style control commands.
+#
+# This function will define the shortcuts in global scope, so please use
+# the following unset_styles() function to unset when no longer needed.
+#######################################
+function define_styles() {
+    # define the font colors
+    black=${black:-$(tput setaf 0)}
+    red=${red:-$(tput setaf 1)}
+    green=${green:-$(tput setaf 2)}
+    yellow=${yellow:-$(tput setaf 3)}
+    blue=${blue:-$(tput setaf 4)}
+    magenta=${magenta:-$(tput setaf 5)}
+    cyan=${cyan:-$(tput setaf 6)}
+    white=${white:-$(tput setaf 7)}
+    # define the font styles
+    bold=${bold:-$(tput bold)}
+    underline=${underline:-$(tput smul)}
+    blink=${blink:-$(tput blink)}
+    rev=${rev:-$(tput rev)}
+    invis=${invis:-$(tput invis)}
+    # define reset to normal
+    reset=${reset:-$(tput sgr 0)}
+}
+
+#######################################
+# Unset the previous defined printing style control commands from global scope.
+#######################################
+function unset_styles() {
+    # unset defined font colors
+    unset black
+    unset red
+    unset green
+    unset yellow
+    unset blue
+    unset magenta
+    unset cyan
+    unset white
+    # unset defined font styles
+    unset bold
+    unset underline
+    unset blink
+    unset rev
+    unset invis
+    # unset defined reset to normal
+    unset reset
+}
 
 #######################################
 # Print colored tips about sourcing a script
