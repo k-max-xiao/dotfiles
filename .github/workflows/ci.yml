@@ -32,3 +32,9 @@ jobs:
     
     - name: Run tests in docker image
       run: docker run --rm -e DOT_TEST_INSTALLERS=true --entrypoint 'bats'  dotfiles:test -r tests/
+
+    - name: Build docker image for snap
+      run: ./tests_snap/build_snap_docker.sh
+    
+    - name: Run tests for snap installer
+      run: docker exec -e DOT_TEST_SNAP=true snappy bats -r /opt/dotfiles/tests_snap/

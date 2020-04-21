@@ -22,17 +22,6 @@ function teardown {
     fi
 }
 
-# function check_result {
-#     local bashrc_path="${1}/.bashrc"
-#     for f in ${BATS_TEST_DIRNAME}/../basics/.[^.]*; do
-#         local file_name=`basename ${f}`
-#         [ -f ${file_name} ]
-#         [[ `grep -Fx "source *${file_name} # Custom Dotfiles" ${bashrc_path} | wc -l` -gt 0 ]]
-#         echo "${file_name} has been checked"
-#     done
-#     return 1
-# }
-
 @test "test function setup_symlinks" {
     # load the setup_symlinks script
     source ${BATS_TEST_DIRNAME}/../setup_symlinks.sh
