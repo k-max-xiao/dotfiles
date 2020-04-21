@@ -20,7 +20,7 @@
     # check the running is successful
     [ "$status" -eq 0 ]
     # check if the latest Python3 has been installed
-    run python3${DOT_PYTHON3_VER:-.8} --version
+    run python${DOT_PYTHON3_VER:-3.8} --version
     [ "$status" -eq 0 ]
     # check if pip has been installed
     run pip3 --version
