@@ -43,7 +43,7 @@ function attempt_snap_install {
     # install the software if it has not been installed
     if ! is_snap_installed "$1"; then
         print_info "Ready to install $1 via snap"
-		if sudo snap install $1; then
+		if sudo snap install $@; then
             # installation succeeded
 			print_success "$1 has been successfully installed via snap!"
             return
@@ -70,5 +70,5 @@ SNAP_APPLICATIONS=(
 	"skype --classic" 
 	"clementine"
 	"wonderwall"
-    "easy-disk-cleaner"
+	"easy-disk-cleaner"
 )
