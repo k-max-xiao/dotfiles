@@ -18,6 +18,12 @@ install_latest_python3
 # source the updated .bashrc file
 source $dir/.bashrc
 
+### to install Docker and to execute post installation steps
+source ./installers/docker.sh
+install_docker_all_in_one
+# source the updated .bashrc file
+source $dir/.bashrc
+
 ### to install all apt applications
 source ./installers/apt.sh
 # install all applications one by one
