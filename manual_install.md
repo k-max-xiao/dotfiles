@@ -64,6 +64,12 @@ Docker is often the easiest way to run a complicated system without spending hou
 
 ------
 
+## Baidu Pan
+
+Baidu Pan is a very popular cloud in China. It now has a Linux client for Ubuntu 18.04. One can download and install it from its official website.
+
+------
+
 ## Wine and winetricks
 
 *wine* is necessary and sometimes very useful on Linux and *winetricks* is its good companion.
