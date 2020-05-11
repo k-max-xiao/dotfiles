@@ -60,14 +60,15 @@ function attempt_snap_install {
 # The array of snap software to install.
 #######################################
 SNAP_APPLICATIONS=(
-	# "pycharm-community --classic" 
-	"slack --classic" 
-	"sublime-text --classic" 
-	"gitkraken" 
-	"code --classic" 
-	"postman" 
-	"ffmpeg" 
-	"skype --classic" 
+    "cmake --classic"
+	# "pycharm-community --classic"
+	"slack --classic"
+	"sublime-text --classic"
+	"gitkraken"
+	"code --classic"
+	"postman"
+	"ffmpeg"
+	"skype --classic"
 	"clementine"
 	"wonderwall"
 	"easy-disk-cleaner"
