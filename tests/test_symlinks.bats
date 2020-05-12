@@ -39,6 +39,6 @@ function teardown {
         # check the soft link exists at the expected location
         [ -f ${BATS_TEST_DIRNAME}/symlinks/${file_name} ]
         # check the soft link has been sourced in .bashrc
-        [[ `grep -Ex "(# )?source [/_[:alnum:]]*/${file_name} # Custom Dotfiles" ${bashrc_path} | wc -l` -gt 0 ]]
+        [[ `grep -Ex "(# )?source [/_.[:alnum:]]*/${file_name} # Custom Dotfiles" ${bashrc_path} | wc -l` -gt 0 ]]
     done
 }

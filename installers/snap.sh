@@ -73,3 +73,17 @@ SNAP_APPLICATIONS=(
 	"wonderwall"
 	"easy-disk-cleaner"
 )
+
+#######################################
+# Install all snap software in one go.
+#######################################
+function install_snap_all_in_one {
+    for app in "${SNAP_APPLICATIONS[@]}"; do
+        attempt_snap_install $app
+        if [ $? -eq 0 ]; then
+            print_success "$app has been successfully installed via snap"
+        else
+            print_error "$app has failed to install via snap"
+        fi
+    done
+}

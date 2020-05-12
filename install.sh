@@ -27,25 +27,20 @@ source $dir/.bashrc
 ### to install all apt applications
 source ./installers/apt.sh
 # install all applications one by one
-for app in "${APT_APPLICATIONS[@]}"; do
-    attempt_apt_install $app
-    if [ $? -eq 0 ]; then
-        print_success "$app has been successfully installed via apt"
-    else
-        print_error "$app has failed to install via apt"
-    fi
-done
+install_apt_all_in_one
 
 ### to install all snap applications
 # this should be placed after apt installations as snapd will be installed via 
 # apt
 source ./installers/snap.sh
 # install all applications one by one
-for app in "${SNAP_APPLICATIONS[@]}"; do
-    attempt_snap_install $app
-    if [ $? -eq 0 ]; then
-        print_success "$app has been successfully installed via snap"
-    else
-        print_error "$app has failed to install via snap"
-    fi
-done
+install_snap_all_in_one
+
+### to install TensorFlow 2.0 with GPU, Python3 and Jupyter supports
+### this requires that Docker is already installed
+### this step may take long time as nVidia docker image and tensorflow docker
+###     image are very large
+source ./installers/tensorflow_docker.sh
+install_tensorflow_all_in_one
+# source the updated .bashrc file
+source $dir/.bashrc
