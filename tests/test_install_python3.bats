@@ -17,6 +17,8 @@
     # execute the python3 installer function
     source ${BATS_TEST_DIRNAME}/../installers/python3.sh
     run install_latest_python3
+    # make the changes taking effects
+    source ~/.bashrc
     # check the running is successful
     [ "$status" -eq 0 ]
     # check if the latest Python3 has been installed

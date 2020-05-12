@@ -66,3 +66,18 @@ APT_APPLICATIONS=(
     "unar"
     "terminator"
 )
+
+#######################################
+# Install all apt software in one go.
+#######################################
+function install_apt_all_in_one {
+    sudo apt-get update
+    for app in "${APT_APPLICATIONS[@]}"; do
+        attempt_apt_install $app
+        if [ $? -eq 0 ]; then
+            print_success "$app has been successfully installed via apt"
+        else
+            print_error "$app has failed to install via apt"
+        fi
+    done
+}

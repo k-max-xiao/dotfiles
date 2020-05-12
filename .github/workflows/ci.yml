@@ -27,14 +27,17 @@ jobs:
     - name: Check out codes
       uses: actions/checkout@v2
     
+    - name: Run tests without docker
+      run: DOT_TEST_INSTALLERS=true DOT_TEST_SNAP=true bats -r tests_docker/ tests_snap/
+    
     - name: Build docker image
       run: docker build -t dotfiles:test .
     
     - name: Run tests in docker image
       run: docker run --rm -e DOT_TEST_INSTALLERS=true -e USER=tester --entrypoint 'bats'  dotfiles:test -r tests/
 
-    - name: Build docker image for snap
-      run: ./tests_snap/build_snap_docker.sh
+    # - name: Build docker image for snap
+    #   run: ./tests_snap/build_snap_docker.sh
     
-    - name: Run tests for snap installer
-      run: docker exec -e DOT_TEST_SNAP=true snappy bats -r /opt/dotfiles/tests_snap/
+    # - name: Run tests for snap installer
+    #   run: docker exec -e DOT_TEST_SNAP=true snappy bats -r /opt/dotfiles/tests_snap/

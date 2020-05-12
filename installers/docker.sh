@@ -70,7 +70,11 @@ function execute_docker_post_installation {
     # delete ~/.docker to avoid permission conflict if it's already created
     sudo rm -rf ~/.docker
     # configure docker to start on boot
-    sudo systemctl enable docker
+    if [ -x "$(command -v systemctl)" ]; then
+        sudo systemctl enable docker
+    else
+        sudo service docker start
+    fi
     # print out message depending on result
     if [ $? -eq 0 ]; then
         print_info "Please restart or log out & in to enable docker service"

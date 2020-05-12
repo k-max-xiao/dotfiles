@@ -13,6 +13,7 @@
 #######################################
 function install_latest_python3 {
     print_info "Ready to install Python${DOT_PYTHON3_VER:-3.8} and pip"
+    sudo apt-get update
     sudo apt-get install -y python${DOT_PYTHON3_VER:-3.8} python3-pip
     print_info "Ready to disable pip globally for both python 2 and 3"
     if [ "$PIP_REQUIRE_VIRTUALENV" == true ]; then

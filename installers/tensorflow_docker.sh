@@ -14,17 +14,25 @@ function install_nvidia_container_toolkit {
     print_info "Ready to install nVidia Container Toolkit"
     # Add the package repositories
     distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+    # install necessary libraries
+    sudo apt-get update && sudo apt-get install -y gnupg2 curl
+    # add apt repositories
     curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
     curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-
+    # install the actual software
     sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
-    sudo systemctl restart docker
+    # restart the docker service with an existing command
+    if [ -x "$(command -v systemctl)" ]; then
+        sudo systemctl restart docker
+    else
+        sudo service docker restart
+    fi
     # print out message depending on result
     if [ $? -eq 0 ]; then
         print_success "nVidia Container Toolkit has been installed"
         return 0
     else
-        print_error "Failed to install TensorFlow 2.0 with GPU support"
+        print_error "Failed to install nVidia Container Toolkit"
         return 1
     fi
 }
