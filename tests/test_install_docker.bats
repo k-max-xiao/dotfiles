@@ -37,3 +37,32 @@
         docker run --rm hello-world
     fi
 }
+
+@test "test TensorFlow 2.0 installer script" {
+    ### This test has to be after docker installer unit test because
+    ### TensorFlow is installed via Docker
+    # skip this test if installer testing not activated
+    if [ -z ${DOT_TEST_INSTALLERS:+x} ]; then
+        skip "Please set DOT_TEST_INSTALLERS to activate installer testings"
+    fi
+    # ensure .bashrc is the updated one
+    source ~/.bashrc
+    # source the necessary util functions
+    source ${BATS_TEST_DIRNAME}/../util_funcs.sh
+    # source the installer script
+    source ${BATS_TEST_DIRNAME}/../installers/tensorflow_docker.sh
+    # install nvidia container toolkit
+    run install_nvidia_container_toolkit
+    # check the installation function return status
+    [ "$status" -eq 0 ]
+    # check installation by running the nvidia-smi with the latest official CUDA image
+    docker run --gpus all nvidia/cuda:10.0-base nvidia-smi
+    [ $? -eq 0 ]
+    # install tensorflow 2 with necessary supports
+    run install_tensorflow_gpu_py3_jupyter
+    # check the installation function return status
+    [ "$status" -eq 0 ]
+    # check installation by running the pulled docker
+    docker run --gpus all --rm tensorflow/tensorflow:latest-gpu echo "success"
+    [ $? -eq 0 ]
+}

@@ -49,3 +49,12 @@ for app in "${SNAP_APPLICATIONS[@]}"; do
         print_error "$app has failed to install via snap"
     fi
 done
+
+### to install TensorFlow 2.0 with GPU, Python3 and Jupyter supports
+### this requires that Docker is already installed
+### this step may take long time as nVidia docker image and tensorflow docker
+###     image are very large
+source ./installers/tensorflow_docker.sh
+install_tensorflow_all_in_one
+# source the updated .bashrc file
+source $dir/.bashrc
