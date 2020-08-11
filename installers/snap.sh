@@ -64,7 +64,7 @@ SNAP_APPLICATIONS=(
 	# "pycharm-community --classic"
 	"slack --classic"
 	"sublime-text --classic"
-	"gitkraken"
+	"gitkraken --classic"
 	"code --classic"
 	"postman"
 	"ffmpeg"
