@@ -2,5 +2,9 @@
 #
 # This script includes the most common sources
 
-###### enable virtualenvwrapper
-source ~/.local/bin/virtualenvwrapper.sh
+###### setting virtualenvwrapper start shell script according to location
+if [ -f ~/.local/bin/virtualenvwrapper.sh ]; then
+    source ~/.local/bin/virtualenvwrapper.sh
+else
+    source /usr/local/bin/virtualenvwrapper.sh
+fi
