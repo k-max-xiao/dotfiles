@@ -5,7 +5,9 @@
 # set vim as default editor
 export EDITOR="vim"
 
-###### set virtualenvwrapper's WORKON_HOME
+###### set virtualenvwrapper's Python version and WORKON_HOME
+# virtualenvwrapper is using the system built-in Python3
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 export WORKON_HOME=~/Workspace/PyEnvs
 
 ###### disable 'pip' command if not in a virtual env
