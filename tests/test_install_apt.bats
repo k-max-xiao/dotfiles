@@ -17,6 +17,8 @@
     # source the apt installer script
     source ${BATS_TEST_DIRNAME}/../installers/apt.sh
     # prepare for the apt installation
+    attempt_apt_install "gnupg"
+    attempt_apt_install "wget"
     pre_install_apt
     # install tzdata in non interactive way to avoid prompt
     print_info "Ready to apt install tzdata"
