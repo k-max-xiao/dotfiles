@@ -42,5 +42,10 @@ install_snap_all_in_one
 ###     image are very large
 source ./installers/tensorflow_docker.sh
 install_tensorflow_all_in_one
+
+### to install the appropriate nvidia driver via ubuntu-drivers
+source ./installers/nvidia_driver.sh
+install_nvidia_driver
+
 # source the updated .bashrc file
 source $dir/.bashrc

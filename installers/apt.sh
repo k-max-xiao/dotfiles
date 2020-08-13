@@ -65,13 +65,30 @@ APT_APPLICATIONS=(
     "snapd"
     "unar"
     "terminator"
+    "google-chrome-stable"
 )
+
+#######################################
+# Necessary preparations, like adding repository to source,
+# before the all-in-one installation.
+#######################################
+function pre_install_apt {
+    print_info "Starting preparations before apt installations..."
+    # add chrome's repository to the source
+    print_info "Adding Google Chrome's repository into source"
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+    sudo sh -c 'echo "deb https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+    # update the apt cache
+    print_info "Updating apt cache"
+    sudo apt-get update
+    print_info "Finished preparations for apt installation."
+}
 
 #######################################
 # Install all apt software in one go.
 #######################################
 function install_apt_all_in_one {
-    sudo apt-get update
+    pre_install_apt
     for app in "${APT_APPLICATIONS[@]}"; do
         attempt_apt_install $app
         if [ $? -eq 0 ]; then
