@@ -47,5 +47,9 @@ install_tensorflow_all_in_one
 source ./installers/nvidia_driver.sh
 install_nvidia_driver
 
+### to install zsh and its relevant tools
+source ./installers/zsh.sh
+install_zsh_and_more
+
 # source the updated .bashrc file
 source $dir/.bashrc

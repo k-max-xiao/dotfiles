@@ -29,7 +29,7 @@ function install_latest_python3 {
     print_info "Ready to install pipenv"
     sudo -H pip3 install -U pipenv
     print_info "Ready to install virtualenv and virtualenvwrapper"
-    pip3 install virtualenv virtualenvwrapper
+    PIP_REQUIRE_VIRTUALENV="" pip3 install virtualenv virtualenvwrapper
     if [ -n ${WORKON_HOME:+x} ]; then
         print_success "Virtualenvwrapper workon home was already defined"
     else
