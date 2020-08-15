@@ -3,6 +3,12 @@
 # other necessary plugins, and set up zsh as the default shell with a customised
 # setting (.zshrc).
 
+#######################################
+# Install zsh via apt
+#
+# Returns:
+#   0 if succeeded to install or 1 otherwise
+#######################################
 function install_zsh {
     app="zsh"
     attempt_apt_install $app
@@ -17,11 +23,23 @@ function install_zsh {
     fi
 }
 
+#######################################
+# Set zsh as the default shell
+#######################################
 function set_zsh_default {
     print_info "Ready to set zsh as the default shell"
     chsh -s `which zsh`
 }
 
+#######################################
+# Install Oh My Zsh by downloading and running its installer script
+#
+# Installation will be skiped if it's already installed by check existence of:
+# ~/.oh-my-zsh
+#
+# Returns:
+#   0 if succeeded to install or 1 otherwise
+#######################################
 function install_oh_my_zsh {
     app="Oh My Zsh"
     if [ -d "$HOME/.oh-my-zsh" ]; then
@@ -29,7 +47,6 @@ function install_oh_my_zsh {
         true
         return
     fi
-    # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     if [ $? -eq 0 ]; then
         print_success "$app has been successfully installed via online install script"
@@ -42,6 +59,15 @@ function install_oh_my_zsh {
     fi
 }
 
+#######################################
+# Install Powerlevel10k by git cloning it to the correct location.
+#
+# Installation will be skiped if it's already installed by check existence of:
+# ~/.oh-my-zsh/custom/themes/powerlevel10k
+#
+# Returns:
+#   0 if succeeded to install or 1 otherwise
+#######################################
 function install_powerlevel10k {
     app="Powerlevel10k"
     if [ -d "$HOME/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
@@ -62,6 +88,15 @@ function install_powerlevel10k {
     fi
 }
 
+#######################################
+# Install zsh and its tools (Oh My Zsh and Powerlevel10k) in one go.
+#
+# Arguments:
+#   set_default_shell: true (by default) if setting zsh as the default shell or
+#     false otherwise
+# Returns:
+#   0 if succeeded to install or 1 otherwise
+#######################################
 function install_zsh_and_more {
     print_info "Before installing zsh and necessary relevant tools..."
     install_zsh

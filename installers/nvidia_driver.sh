@@ -2,6 +2,9 @@
 # This install script includes the function to install the appropriate version
 # of the nvidia driver via the new software ubuntu-drivers
 
+#######################################
+# Install the appropriate nvidia driver bia ubuntu-drivers
+#######################################
 function install_nvidia_driver {
     print_info "Ready to install the appropriate nvidia driver"
     sudo ubuntu-drivers autoinstall
