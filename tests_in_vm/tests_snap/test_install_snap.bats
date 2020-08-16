@@ -13,9 +13,9 @@
     # ensure .bashrc is the updated one
     source ~/.bashrc
     # source the necessary util functions
-    source ${BATS_TEST_DIRNAME}/../util_funcs.sh
+    source ${BATS_TEST_DIRNAME}/../../util_funcs.sh
     # source the snap installer script
-    source ${BATS_TEST_DIRNAME}/../installers/snap.sh
+    source ${BATS_TEST_DIRNAME}/../../installers/snap.sh
     # iterate over all applications to install
     for app in "${SNAP_APPLICATIONS[@]}"; do
         # attempt to install

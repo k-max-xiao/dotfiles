@@ -8,3 +8,11 @@ if [ -f ~/.local/bin/virtualenvwrapper.sh ]; then
 else
     source /usr/local/bin/virtualenvwrapper.sh
 fi
+
+###### setting pyenv and its tools
+if command -v pyenv 1>/dev/null 2>&1; then
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+else
+    echo "pyenv not detected"
+fi

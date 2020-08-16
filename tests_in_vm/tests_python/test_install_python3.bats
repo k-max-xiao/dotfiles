@@ -13,9 +13,9 @@
     # ensure .bashrc is the updated one
     source ~/.bashrc
     # source the necessary util functions
-    source ${BATS_TEST_DIRNAME}/../util_funcs.sh
+    source ${BATS_TEST_DIRNAME}/../../util_funcs.sh
     # execute the python3 installer function
-    source ${BATS_TEST_DIRNAME}/../installers/python3.sh
+    source ${BATS_TEST_DIRNAME}/../../installers/python3.sh
     run install_latest_python3
     # make the changes taking effects
     source ~/.bashrc
@@ -37,6 +37,14 @@
     virtualenv --version >/dev/null 2>&1
     [[ $? -eq 0 ]]
     # check if virtualenvwrapper has been installed
-    ~/.local/bin/virtualenvwrapper.sh --version >/dev/null 2>&1
+    if [ -f ~/.local/bin/virtualenvwrapper.sh ]; then
+        ~/.local/bin/virtualenvwrapper.sh --version >/dev/null 2>&1
+    else
+        /usr/local/bin/virtualenvwrapper.sh --version >/dev/null 2>&1
+    fi
     [[ $? -eq 0 ]]
+    # check if pyenv has been installed
+    $HOME/.pyenv/bin/pyenv -v >/dev/null 2>&1
+    [[ $? -eq 0 ]]
+    [ -d "$HOME/.pyenv" ]
 }
