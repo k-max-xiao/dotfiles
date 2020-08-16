@@ -13,9 +13,9 @@
     # ensure .bashrc is the updated one
     source ~/.bashrc
     # source the necessary util functions
-    source ${BATS_TEST_DIRNAME}/../util_funcs.sh
+    source ${BATS_TEST_DIRNAME}/../../util_funcs.sh
     # source the installer script
-    source ${BATS_TEST_DIRNAME}/../installers/docker.sh
+    source ${BATS_TEST_DIRNAME}/../../installers/docker.sh
     # add the apt repository
     run set_up_docker_apt_repository
     # check if the repository has been corrected added
@@ -48,9 +48,9 @@
     # ensure .bashrc is the updated one
     source ~/.bashrc
     # source the necessary util functions
-    source ${BATS_TEST_DIRNAME}/../util_funcs.sh
+    source ${BATS_TEST_DIRNAME}/../../util_funcs.sh
     # source the installer script
-    source ${BATS_TEST_DIRNAME}/../installers/tensorflow_docker.sh
+    source ${BATS_TEST_DIRNAME}/../../installers/tensorflow_docker.sh
     # install nvidia container toolkit
     run install_nvidia_container_toolkit
     # check the installation function return status
