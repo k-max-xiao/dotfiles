@@ -198,7 +198,7 @@ latter one.
 
 a. ${magenta}|&${reset} is an abbreviation for ${green}2>&1 |${reset}
 b. ${magenta}&>/dev/null${reset} is an abbreviation for \
-${green}>/dev/null 2>&1${reset}
+${green}>/dev/null${reset}
 c. ${magenta}>/dev/null${reset} is an abbreviation for \
 ${green}1>/dev/null${reset}"
 

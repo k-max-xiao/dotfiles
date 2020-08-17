@@ -218,7 +218,7 @@ function ask_and_update_sudo() {
         # process is running and you have the permission to send a signal to it
         # This signal will not terminate the process
         kill -0 "$$" || exit
-        # &>/dev/null is an abbreviation for >/dev/null 2>&1, to silence all output
+        # &>/dev/null is an abbreviation for >/dev/null, to silence all output
     done &>/dev/null &
 }
 

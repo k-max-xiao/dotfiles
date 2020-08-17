@@ -78,7 +78,7 @@ function install_cuda {
         echo "  ${cyan}Ready to install the Cuda repo deb package${reset}"
         dpkg -i $_cuda_deb || return 1
         apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
-        apt update
+        apt update >/dev/null
         echo "  ${cyan}Ready to install the Cuda toolkit${reset}"
         apt -y install cuda-${1//./-} || return 1
         echo "  ${cyan}Ready to export the Cuda and Nsight path to PATH env"
@@ -136,7 +136,7 @@ function install_TensorRT {
         dpkg -i $_tensorrt_deb
         # to add the repo key
         apt-key add $(ls /var/nv-tensorrt-repo-cuda$1-*/*.pub | tail -1)
-        apt update
+        apt update >/dev/null
         # to install tensorrt via its meta package
         apt -y install tensorrt
         # to install Python2, Python3 and TensorFlow supporting packages

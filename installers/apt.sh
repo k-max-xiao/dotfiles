@@ -69,18 +69,40 @@ APT_APPLICATIONS=(
 )
 
 #######################################
+# Check if the repository has already been added into the source list
+#
+# Arguments:
+#   repo: the repository to check
+# Returns:
+#   0 if succeeded to install or 1 otherwise
+#######################################
+function repository_already_added {
+    if [[ $(find /etc/apt/ -name "*.list" | xargs cat | grep "^[[:space:]]*deb" | grep -v "deb-src" | grep "$1" | wc -l) -gt 0 ]]; then
+        true
+        return
+    else
+        false
+        return
+    fi
+}
+
+#######################################
 # Necessary preparations, like adding repository to source,
 # before the all-in-one installation.
 #######################################
 function pre_install_apt {
     print_info "Starting preparations before apt installations..."
     # add chrome's repository to the source
-    print_info "Adding Google Chrome's repository into source"
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
-    sudo sh -c 'echo "deb https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+    if repository_already_added "deb https://dl.google.com/linux/chrome/deb/ stable main"; then
+        print_info "Google Chrome's repository has already been added"
+    else
+        print_info "Adding Google Chrome's repository into source"
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
+        sudo sh -c 'echo "deb https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+    fi
     # update the apt cache
     print_info "Updating apt cache"
-    sudo apt-get update
+    sudo apt-get update >/dev/null
     print_info "Finished preparations for apt installation."
 }
 

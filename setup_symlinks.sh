@@ -28,13 +28,13 @@
 # 1 is the handle for STDOUT. & signals that 1 is a hanlder, otherwise 1 will
 # be treated as a file name.
 #
-# In total, >/dev/null 2>&1 means to discard all standard output and error,
+# In total, >/dev/null means to discard all standard output and error,
 # resulting in no output to the screen.
 #
 # The nested double quotes are valid because once inside $( ... ), quoting
 # starts all over from scratch. In other words, "..." and $( ... ) can nest
 # within each other.
-_SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+_SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 
 source $_SCRIPT_PATH/util_funcs.sh
 

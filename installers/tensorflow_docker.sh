@@ -15,12 +15,12 @@ function install_nvidia_container_toolkit {
     # Add the package repositories
     distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
     # install necessary libraries
-    sudo apt-get update && sudo apt-get install -y gnupg2 curl
+    sudo apt-get update >/dev/null && sudo apt-get install -y gnupg2 curl  >/dev/null
     # add apt repositories
-    curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-    curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+    curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - >/dev/null
+    curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list >/dev/null
     # install the actual software
-    sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+    sudo apt-get update >/dev/null && sudo apt-get install -y nvidia-container-toolkit >/dev/null
     # restart the docker service with an existing command
     if [ -x "$(command -v systemctl)" ]; then
         sudo systemctl restart docker
@@ -43,7 +43,7 @@ function install_nvidia_container_toolkit {
 #######################################
 function install_tensorflow_gpu_py3_jupyter {
     print_info "Ready to pull TensorFlow 2.0 with GPU support via Docker"
-    docker pull tensorflow/tensorflow:latest-gpu-py3-jupyter
+    docker pull tensorflow/tensorflow:latest-gpu-py3-jupyter >/dev/null
     # print out message depending on result
     if [ $? -eq 0 ]; then
         print_success "TensorFlow 2.0 with GPU support has been installed"
