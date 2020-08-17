@@ -10,7 +10,7 @@ else
 fi
 
 ###### setting pyenv and its tools
-if command -v pyenv 1>/dev/null 2>&1; then
+if command -v pyenv 1>/dev/null; then
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
 else

@@ -31,20 +31,20 @@
     run pip3 install
     [ "$status" -ne 0 ]
     # check if pipenv has been installed
-    LANG=C.UTF-8 pipenv --version >/dev/null 2>&1
+    LANG=C.UTF-8 pipenv --version >/dev/null
     [[ $? -eq 0 ]]
     # check if virtualenv has been installed
-    virtualenv --version >/dev/null 2>&1
+    virtualenv --version >/dev/null
     [[ $? -eq 0 ]]
     # check if virtualenvwrapper has been installed
     if [ -f ~/.local/bin/virtualenvwrapper.sh ]; then
-        ~/.local/bin/virtualenvwrapper.sh --version >/dev/null 2>&1
+        ~/.local/bin/virtualenvwrapper.sh --version >/dev/null
     else
-        /usr/local/bin/virtualenvwrapper.sh --version >/dev/null 2>&1
+        /usr/local/bin/virtualenvwrapper.sh --version >/dev/null
     fi
     [[ $? -eq 0 ]]
     # check if pyenv has been installed
-    $HOME/.pyenv/bin/pyenv -v >/dev/null 2>&1
+    $HOME/.pyenv/bin/pyenv -v >/dev/null
     [[ $? -eq 0 ]]
     [ -d "$HOME/.pyenv" ]
 }

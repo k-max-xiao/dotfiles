@@ -33,7 +33,7 @@ function install_pyenv {
         echo "###### setting path and root for pyenv" >> ~/.bashrc
         echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
         echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-        echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\n  eval "$(pyenv virtualenv-init -)"\nfi' >> ~/.bashrc
+        echo -e 'if command -v pyenv 1>/dev/null; then\n  eval "$(pyenv init -)"\n  eval "$(pyenv virtualenv-init -)"\nfi' >> ~/.bashrc
         echo ""  >> ~/.bashrc
         print_success "\$PYENV_ROOT has been set"
     fi
@@ -51,8 +51,8 @@ function install_pyenv {
 function install_latest_python3 {
     # install python3 and its pip
     print_info "Ready to install Python${DOT_PYTHON3_VER:-3.8} and pip"
-    sudo apt-get update
-    sudo apt-get install -y python${DOT_PYTHON3_VER:-3.8} python3-pip
+    sudo apt-get update >/dev/null
+    sudo apt-get install -y python${DOT_PYTHON3_VER:-3.8} python3-pip >/dev/null
     # disable global pip
     print_info "Ready to disable pip globally for both python 2 and 3"
     if [ "$PIP_REQUIRE_VIRTUALENV" == true ]; then
@@ -67,10 +67,10 @@ function install_latest_python3 {
     fi
     # install pipenv
     print_info "Ready to install pipenv"
-    sudo -H pip3 install -U pipenv
+    sudo -H pip3 install -U pipenv >/dev/null
     # install virtualenv and virtualenvwrapper
     print_info "Ready to install virtualenv and virtualenvwrapper"
-    PIP_REQUIRE_VIRTUALENV="" pip3 install virtualenv virtualenvwrapper
+    PIP_REQUIRE_VIRTUALENV="" pip3 install virtualenv virtualenvwrapper >/dev/null
     if [ -n ${WORKON_HOME:+x} ]; then
         print_success "Virtualenvwrapper workon home was already defined"
     else

@@ -10,7 +10,7 @@
 function set_up_docker_apt_repository {
     print_info "Ready to add Docker's apt repository"
     # update the apt package index
-    sudo apt-get update
+    sudo apt-get update >/dev/null
     # install necessary libraries
     sudo apt-get install -y \
         apt-transport-https \
@@ -19,16 +19,18 @@ function set_up_docker_apt_repository {
         gnupg-agent \
         software-properties-common \
         lxc \
-        iptables
+        iptables \
+        >/dev/null
     # add Docker's official GPG key
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - >/dev/null
     # verify key's fingerprint
     test $(sudo apt-key fingerprint 0EBFCD88 | wc -l) -gt 0
     # set up Docker's stable repository
     sudo add-apt-repository \
         "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
         $(lsb_release -cs) \
-        stable"
+        stable" \
+        >/dev/null
     # print out message depending on result
     if [ $? -eq 0 ]; then
         print_success "Docker's apt repository has been successfully added"
@@ -45,9 +47,9 @@ function set_up_docker_apt_repository {
 function install_docker_engine {
     print_info "Ready to install docker"
     # update the apt package index
-    sudo apt-get update
+    sudo apt-get update >/dev/null
     # install docker
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io >/dev/null
     # print out message depending on result
     if [ $? -eq 0 ]; then
         print_success "Docker has been successfully installed"
@@ -64,16 +66,16 @@ function install_docker_engine {
 function execute_docker_post_installation {
     print_info "Ready to execute Docker's post installation steps"
     # create the docker group
-    sudo groupadd docker
+    sudo groupadd docker >/dev/null
     # add the user to the docker group
-    sudo usermod -aG docker $USER
+    sudo usermod -aG docker $USER >/dev/null
     # delete ~/.docker to avoid permission conflict if it's already created
     sudo rm -rf ~/.docker
     # configure docker to start on boot
     if [ -x "$(command -v systemctl)" ]; then
-        sudo systemctl enable docker
+        sudo systemctl enable docker >/dev/null
     else
-        sudo service docker start
+        sudo service docker start >/dev/null
     fi
     # print out message depending on result
     if [ $? -eq 0 ]; then

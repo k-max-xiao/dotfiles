@@ -20,7 +20,7 @@ fi
 if [ "$(which docker)" = "/snap/bin/docker" ]; then
     export TMPDIR="$(readlink -f ~/snap/docker/current)"
 	# we need to run the snap once to have $SNAP_USER_DATA created
-	/snap/bin/docker >/dev/null 2>&1
+	/snap/bin/docker >/dev/null
 fi
 
 BUILDDIR=$(mktemp -d)
@@ -43,9 +43,9 @@ print_info() {
 
 clean_up() {
     sleep 1
-    $SUDO docker rm -f $CONTNAME >/dev/null 2>&1 || true
-    $SUDO docker rmi $IMGNAME >/dev/null 2>&1 || true
-    $SUDO docker rmi $($SUDO docker images -f "dangling=true" -q) >/dev/null 2>&1 || true
+    $SUDO docker rm -f $CONTNAME >/dev/null || true
+    $SUDO docker rmi $IMGNAME >/dev/null || true
+    $SUDO docker rmi $($SUDO docker images -f "dangling=true" -q) >/dev/null || true
     rm_builddir
 }
 
@@ -131,7 +131,7 @@ $SUDO docker run \
 TIMEOUT=300
 SLEEP=0.1
 echo -n "Waiting up to $(($TIMEOUT/10)) seconds for snapd startup "
-while [ "$($SUDO docker exec $CONTNAME sh -c 'systemctl status snapd.seeded >/dev/null 2>&1; echo $?')" != "0" ]; do
+while [ "$($SUDO docker exec $CONTNAME sh -c 'systemctl status snapd.seeded >/dev/null; echo $?')" != "0" ]; do
     echo -n "."
     sleep $SLEEP || clean_up
     if [ "$TIMEOUT" -le "0" ]; then
