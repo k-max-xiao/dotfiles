@@ -1,71 +1,8 @@
-# Necessary Manual Installations or Settings
+# The installation code snippets for reference
 
-The `install.sh` could help us install a lot of the necessary software and configure a lot of useful settings, but not all can be easily done in automation.
-Sometimes it may be worth to manually install few programs and manually configure some settings instead of spending too much time to automate them in an ugly way, especially when these manual operations are only needed in a very low frequency.
+Some software have different installation instructions on different Ubuntu and some may introduce conflicts if the installation is not well handled.
 
-The following sections list the manual operations to execute after running the `install.sh` in a brand new Linux. It's better to go through all of them before actually starting to use the os for a much better seamless transfer experience.
-
-------
-
-## Chrome
-
-Chrome is number one to install as it will be needed to download and install the other stuffs.
-
-1. Download the `.deb` installer from the official website.
-2. Install it
-3. Login in Chrome and sync settings
-4. Create shortcuts for the frequently used web pages, for example:
-   1. Gmail
-   2. Lookout
-   3. ToDo List
-   4. Google Keep
-
-------
-
-## Sougou Pinyin
-
-Currently, Sougou Pinyin is the only good Chinese input on a Ubuntu system, since the Google Pinyin discontinued by March 2019.
-
-1. Download the install package via the following [link](https://pinyin.sogou.com/linux/?r=pinyin)
-
-2. Install the debian package via Software Center by double clicking
-
-3. Resolve the broken dependencies (mainly the fcitx dependencies) via a terminal (`-f` means to fix the broken dependencies): `sudo apt-get install -f`
-
-4. You may need to restart the system, change the input method to fcitx and add the Sogou Input into the list of available inputs
-
-------
-
-## nVidia Driver
-
-nVidia driver is definitely a must if one wants to release the full power of the GPU or to use GPU for heavy scientific computations.
-
-1. If *third party drivers* has been selected in Ubuntu installation, a NVidia driver should have already been installed
-2. This driver may not be the latest long-live stable version, e.g. in this installation it is the version 384.130
-3. You still need to manually switch to it via *System settings...->Software & Updates->Additional Drivers*
-
-------
-
-## Disable Recent Usage Recording
-
-1. Open **System Settings** via clicking right top *setting* button
-2. Choose **Security & Privacy** then **Files & Applications** tab
-3. Clear All Usage Data
-4. Turn off recording file and application usage
-
-------
-
-## Docker
-
-Docker installation has been automated in the `install.sh` script. But one may need to restart the system to actually activate `docker` in the system, which is one required step in Docker's post-installation instructions.
-
-------
-
-## Baidu Pan
-
-Baidu Pan is a very popular cloud in China. It now has a Linux client for Ubuntu 18.04. One can download and install it from its official website.
-
-------
+This note keeps some installation code snippets for such software as a reference, since these snippets are currently not incorporated in the `install.sh`.
 
 ## Wine and winetricks
 
@@ -95,8 +32,6 @@ function install_wine {
     rm $_tmp_download_folder/winehq.key
 }
 ```
-
-------
 
 ## ROS
 
@@ -131,16 +66,6 @@ function install_ROS_Kinetic {
     apt -y install python-rosinstall python-rosinstall-generator python-wstool build-essential
 }
 ```
-
-------
-
-## ROS 2
-
-ROS 2 has already released some stable official versions. As the successor of ROS, ROS 2 has great improvement from design to implementation, making it more stable and a better option for robotic project, no matter personal or commercial, in long term. The community of ROS 1 will also transfer to the community of ROS 2 in long term. Therefore, it is worth to install ROS 2 on the machine as well, independent to the installation of ROS 1.
-
-Please refer to the official website for the installation guidance.
-
-------
 
 ## OpenCV
 
@@ -239,27 +164,3 @@ function check_OpenCV3_installed {
     false
 }
 ```
-
-------
-
-## Scientific Libraries
-
-There are a lot of useful scientific libraries written in C or C++. They may be needed in scientific or robotic projects so it may be worth to install (or more often to compile) them. The following is an incomplete list and please refer to the official website of each library for correct installation.
-
-- Eigen3
-- Ceres
-- g2o
-
-------
-
-## PyTorch (Optional)
-
-`PyTorch` is another popular deep learning framework and it is getting more and more popularity. It is worth to install this as well so both of the two main stream deep learning frameworks will be available to use on the machine.
-
-------
-
-## Anaconda (Optional)
-
-Anaconda is a platform for data science. The advantages includes one-stop solution for data science projects, `conda` replacing `virtualenv` and `pip`, some data science or finance libraries are newer or only available on `conda`. However, this software takes too much space, which sometimes can easily reach 10Gb or 20Gb, and lots of more general libraries are newer on `pip`.
-
-It is worth to instal this software if the space is allowed or a library of a project is only available in `conda`. Even in such situation, `miniconda` may still be a better option than `anaconda`.
