@@ -46,6 +46,7 @@ Although the project aims to automate every single step of setting up a new mach
   - `unar`
   - `terminator`
   - `google-chrome-stable` (need to add the repository into the source list as a prerequisite step)
+  - `wine` and `winetricks`
 - Installation via `snap`:
   - `cmake`
   - ~~`pycharm`~~ (currently disabled)
@@ -112,9 +113,10 @@ Baidu Pan is a very popular cloud in China. It now has a Linux client for Ubuntu
 
 ### Wine and winetricks
 
-*wine* is necessary and sometimes very useful on Linux and *winetricks* is its good companion.
+*wine* is necessary and sometimes very useful on Linux and *winetricks* is its good companion. Their installations are automated, but it's recommended to:
 
-The installation of *wine* is different for different Ubuntu version so it's recommended to follow official instructions on the official website.
+1. Run `winecfg` once after installation of *wine* for some initial configuration, like installing *Mono* and *Gecko*.
+2. Create alias for different locales if necessary.
 
 ### ROS and ROS2 (Optional)
 

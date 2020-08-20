@@ -43,7 +43,7 @@ function attempt_apt_install {
     # install the software if it has not been installed
     if ! is_apt_installed "$1"; then
         print_info "Ready to install $1 via apt"
-		if sudo apt-get install -y $2 $1; then
+		if sudo apt-get install -y $@; then
             # installation succeeded
 			print_success "$1 has been successfully installed via apt!"
             return
@@ -67,8 +67,14 @@ APT_APPLICATIONS=(
     "terminator"
     "google-chrome-stable"
     "winehq-devel"
+    "winetricks"
 )
 
+#######################################
+# The array of apt software installation options.
+# The size of this array should match the size of APT_APPLICATIONS.
+# Most of the values are empty (no special installation option).
+#######################################
 APT_OPTIONS=(
     ""
     ""
@@ -77,6 +83,7 @@ APT_OPTIONS=(
     ""
     ""
     "--install-recommends"
+    ""
 )
 
 #######################################
@@ -97,6 +104,10 @@ function repository_already_added {
     fi
 }
 
+#######################################
+# Necessary preparations, like adding repository to source,
+# for installing Wine.
+#######################################
 function pre_wine_apt {
     # enable 32-bit support
     sudo dpkg --add-architecture i386
@@ -106,7 +117,7 @@ function pre_wine_apt {
     else
         print_info "Adding Wine's repository into source"
         wget -q -O - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
-        sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main'
+        echo "deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main" | sudo tee /etc/apt/sources.list.d/wine.list
     fi
     # add OpenSUSE Wine repository to the source for dependency libraries
     if repository_already_added "deb http://download.opensuse.org/repositories/Emulators:/Wine:/Debian/xUbuntu_18.04 ./"; then
@@ -118,6 +129,10 @@ function pre_wine_apt {
     fi
 }
 
+#######################################
+# Necessary preparations, like adding repository to source,
+# for installing Chrome.
+#######################################
 function pre_chrome_apt {
     # add chrome's repository to the source
     if repository_already_added "deb https://dl.google.com/linux/chrome/deb/ stable main"; then
@@ -148,8 +163,7 @@ function pre_install_apt {
 #######################################
 function install_apt_all_in_one {
     pre_install_apt
-    # for app in "${APT_APPLICATIONS[@]}"; do
-    for (( idx=1; idx<=${#APT_APPLICATIONS[@]}; idx++ )); do
+    for idx in "${!APT_APPLICATIONS[@]}"; do
         app=${APT_APPLICATIONS[$idx]}
         option=${APT_OPTIONS[$idx]}
         attempt_apt_install $app $option

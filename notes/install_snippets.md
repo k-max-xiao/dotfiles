@@ -4,35 +4,6 @@ Some software have different installation instructions on different Ubuntu and s
 
 This note keeps some installation code snippets for such software as a reference, since these snippets are currently not incorporated in the `install.sh`.
 
-## Wine and winetricks
-
-*wine* is necessary and sometimes very useful on Linux and *winetricks* is its good companion.
-
-1. Install *wine* by following the instructions on its official website. Someone suggests the x86 version for compatibility but it may be worth to check if x64 version is now compatible with x86 now.
-2. Install *winetricks*.
-3. set up locales and alias for using wine in different locales
-
-The following code snippet was used in the install script for Ubuntu 16.04 and only serves as a reference. The installation on Ubuntu 18.04 may be largely simplified.
-
-```bash
-### install wine
-function install_wine {
-    # to enable 32 bit architecture:
-    dpkg --add-architecture i386
-    # download and add the repository key
-    wget -P $_tmp_download_folder -nc https://dl.winehq.org/wine-builds/winehq.key
-    apt-key add $_tmp_download_folder/winehq.key
-    # add the repository
-    apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ xenial main'
-    # update packages
-    apt update >/dev/null
-    # install the development branch
-    apt install --install-recommends winehq-devel
-    # remove the winekey file
-    rm $_tmp_download_folder/winehq.key
-}
-```
-
 ## ROS
 
 ROS (Robot Operating System) is necessary for any robotic project. ROS Kinetic is the version for Ubuntu 16.04 and it's ROS Melodic for Ubuntu 18.04.
