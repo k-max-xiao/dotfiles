@@ -43,7 +43,7 @@ function attempt_apt_install {
     # install the software if it has not been installed
     if ! is_apt_installed "$1"; then
         print_info "Ready to install $1 via apt"
-		if sudo apt-get install -y $1; then
+		if sudo apt-get install -y $2 $1; then
             # installation succeeded
 			print_success "$1 has been successfully installed via apt!"
             return
@@ -66,6 +66,17 @@ APT_APPLICATIONS=(
     "unar"
     "terminator"
     "google-chrome-stable"
+    "winehq-devel"
+)
+
+APT_OPTIONS=(
+    ""
+    ""
+    ""
+    ""
+    ""
+    ""
+    "--install-recommends"
 )
 
 #######################################
@@ -86,12 +97,28 @@ function repository_already_added {
     fi
 }
 
-#######################################
-# Necessary preparations, like adding repository to source,
-# before the all-in-one installation.
-#######################################
-function pre_install_apt {
-    print_info "Starting preparations before apt installations..."
+function pre_wine_apt {
+    # enable 32-bit support
+    sudo dpkg --add-architecture i386
+    # add wine's repository to the source
+    if repository_already_added "deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main"; then
+        print_info "Wine's repository has already been added"
+    else
+        print_info "Adding Wine's repository into source"
+        wget -q -O - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
+        sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main'
+    fi
+    # add OpenSUSE Wine repository to the source for dependency libraries
+    if repository_already_added "deb http://download.opensuse.org/repositories/Emulators:/Wine:/Debian/xUbuntu_18.04 ./"; then
+        print_info "OpenSUSE Wine repository has already been added"
+    else
+        print_info "Adding OpenSUSE Wine repository into source for Wine's dependencies"
+        wget -q -O - https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/xUbuntu_18.04/Release.key | sudo apt-key add -
+        echo "deb http://download.opensuse.org/repositories/Emulators:/Wine:/Debian/xUbuntu_18.04 ./" | sudo tee /etc/apt/sources.list.d/wine-obs.list
+    fi
+}
+
+function pre_chrome_apt {
     # add chrome's repository to the source
     if repository_already_added "deb https://dl.google.com/linux/chrome/deb/ stable main"; then
         print_info "Google Chrome's repository has already been added"
@@ -100,6 +127,16 @@ function pre_install_apt {
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - 
         sudo sh -c 'echo "deb https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
     fi
+}
+
+#######################################
+# Necessary preparations, like adding repository to source,
+# before the all-in-one installation.
+#######################################
+function pre_install_apt {
+    print_info "Starting preparations before apt installations..."
+    pre_chrome_apt
+    pre_wine_apt
     # update the apt cache
     print_info "Updating apt cache"
     sudo apt-get update >/dev/null
@@ -111,8 +148,11 @@ function pre_install_apt {
 #######################################
 function install_apt_all_in_one {
     pre_install_apt
-    for app in "${APT_APPLICATIONS[@]}"; do
-        attempt_apt_install $app
+    # for app in "${APT_APPLICATIONS[@]}"; do
+    for (( idx=1; idx<=${#APT_APPLICATIONS[@]}; idx++ )); do
+        app=${APT_APPLICATIONS[$idx]}
+        option=${APT_OPTIONS[$idx]}
+        attempt_apt_install $app $option
         if [ $? -eq 0 ]; then
             print_success "$app has been successfully installed via apt"
         else
