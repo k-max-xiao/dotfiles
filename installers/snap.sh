@@ -72,6 +72,7 @@ SNAP_APPLICATIONS=(
 	"clementine"
 	"wonderwall"
 	"easy-disk-cleaner"
+    "node --channel=14/stable --classic"
 )
 
 #######################################
