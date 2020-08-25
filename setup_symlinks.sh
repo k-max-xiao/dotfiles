@@ -38,8 +38,11 @@ _SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 
 source $_SCRIPT_PATH/util_funcs.sh
 
-# find all dotfiles to symlink and store them in an array
+# find all dotfiles to symlink and source and store them in an array
 declare -a FILES_TO_SYMLINK=$(find $_SCRIPT_PATH/basics/ -type f)
+
+# find all dotfiles that only need to symlink to user's home folder
+declare -a FILES_ONLY_SYMLINK=$(find $_SCRIPT_PATH/basics/only_symlink/ -type f)
 
 # an array to store all the full paths of the soft links to create
 declare -a LINK_PATHS
@@ -61,6 +64,8 @@ function create_symlinks() {
     local targetDir="$1"
     # initialise the full paths array to empty array before creating new links
     LINK_PATHS=()
+    # merge to get all files to symlink
+    files_to_link=("${FILES_TO_SYMLINK[@]}" "${FILES_ONLY_SYMLINK[@]}")
     # symlink the dotfiles one by one
     for sourceFile in ${FILES_TO_SYMLINK[@]}; do
         # construct the target file path
