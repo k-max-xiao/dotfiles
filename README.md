@@ -60,6 +60,7 @@ Although the project aims to automate every single step of setting up a new mach
   - `clementine`
   - `wonderwall`
   - `easy-disk-cleaner`
+  - `nodejs` including `npm`
 - `Docker`
   - `Tensorflow` via Docker
 - Latest `Nvidia Driver`
