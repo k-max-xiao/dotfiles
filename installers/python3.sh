@@ -55,7 +55,7 @@ function install_latest_python3 {
     sudo apt-get install -y python${DOT_PYTHON3_VER:-3.8} python3-pip >/dev/null
     # disable global pip
     print_info "Ready to disable pip globally for both python 2 and 3"
-    if [ "$PIP_REQUIRE_VIRTUALENV" == true ]; then
+    if $PIP_REQUIRE_VIRTUALENV; then
         print_success "Pip was already disabled globally"
     else
         print_question "Pip was not yet disabled by dotfiles?"

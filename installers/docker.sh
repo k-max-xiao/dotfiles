@@ -66,16 +66,27 @@ function install_docker_engine {
 function execute_docker_post_installation {
     print_info "Ready to execute Docker's post installation steps"
     # create the docker group
-    sudo groupadd docker >/dev/null
-    # add the user to the docker group
-    sudo usermod -aG docker $USER >/dev/null
-    # delete ~/.docker to avoid permission conflict if it's already created
-    sudo rm -rf ~/.docker
-    # configure docker to start on boot
-    if [ -x "$(command -v systemctl)" ]; then
-        sudo systemctl enable docker >/dev/null
+    if grep -q docker /etc/group; then
+        print_info "docker group has been previously created"
     else
-        sudo service docker start >/dev/null
+        print_info "creating docker group"
+        sudo groupadd docker >/dev/null
+    fi
+    # add the user to the docker group
+    if id -nG "$USER" | grep -qw docker; then
+        print_info "$USER has been previously added into docker group"
+    else
+        print_info "adding $USER into group docker"
+        sudo usermod -aG docker $USER >/dev/null
+        # delete ~/.docker to avoid permission conflict if it's already created
+        sudo rm -rf ~/.docker
+        # configure docker to start on boot
+        print_info "setting docker to start on boot"
+        if [ -x "$(command -v systemctl)" ]; then
+            sudo systemctl enable docker >/dev/null
+        else
+            sudo service docker start >/dev/null
+        fi
     fi
     # print out message depending on result
     if [ $? -eq 0 ]; then
