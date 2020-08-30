@@ -39,7 +39,7 @@ _SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 source $_SCRIPT_PATH/util_funcs.sh
 
 # find all dotfiles to symlink and source and store them in an array
-declare -a FILES_TO_SYMLINK=$(find $_SCRIPT_PATH/basics/ -type f)
+declare -a FILES_TO_SYMLINK=$(find $_SCRIPT_PATH/basics/ -maxdepth 1 -type f)
 
 # find all dotfiles that only need to symlink to user's home folder
 declare -a FILES_ONLY_SYMLINK=$(find $_SCRIPT_PATH/basics/only_symlink/ -type f)
